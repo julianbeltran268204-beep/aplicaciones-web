@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nébula Music - Inicio</title>
+    <link rel="stylesheet" href="../static/styles/styles.css">
+</head>
+<body class="home">
+
+<!-- MENÚ DE NAVEGACIÓN -->
+<nav>
+    <a class="logo" href="index.html">
+        <img src="../static/imgs/nebula-03.svg" alt="Logo Nébula">
+    </a>
+
+    <!-- 1º el checkbox, 2º el label, 3º el ul. En ese orden. -->
+    <input type="checkbox" id="menu-toggle">
+    <label for="menu-toggle" class="menu-button" aria-label="Abrir menú">
+        <span></span>
+        <span></span>
+        <span></span>
+    </label>
+
+    <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="iniciar-sesion.html">Iniciar Sesión</a></li>
+        <li><a href="registro.html">Registrarse</a></li>
+    </ul>
+</nav>
+
+<!-- CABECERA -->
+<header class="principal">
+    <img src="../static/imgs/cover.jpg" alt="Cover Nébula">
+    <h1>Tu música en la <span>nube</span> y en tu <span>espacio</span>.</h1>
+</header>
+
+<!-- CONTENIDO PRINCIPAL -->
+<main>
+
+    <!-- SECCIÓN DE NOTICIAS -->
+    <section id="news">
+        <h2>Novedades de la Semana</h2>
+
+        <!-- Artículo 1 -->
+        <article>
+            <img src="../static/imgs/taylor%20kanye.jpg" alt="Taylor Swift">
+            <div class="content">
+                <div>
+                    <h3>Taylor Swift en su nueva era</h3>
+                    <p>El nuevo disco de Taylor, <i>"The life of a showgirl"</i> saldrá a la venta el 3 de octubre.</p>
+                </div>
+            </div>
+        </article>
+
+        <!-- Artículo 2 -->
+        <article>
+            <img src="../static/imgs/oasis.jpg" alt="Oasis">
+            <div class="content">
+                <div>
+                    <h3>Oasis: El Reencuentro</h3>
+                    <p>Los hermanos Liam y Noel Gallagher se reencontrarán con sus fans y traerán un setlist espectacular.</p>
+                </div>
+            </div>
+        </article>
+
+        <!-- Artículo 3 -->
+        <article>
+            <img src="../static/imgs/header2.jpg" alt="Los Reztos">
+            <div class="content">
+                <div>
+                    <h3>Tributo a Marea</h3>
+                    <p>La banda local "Los Reztos" ofreció un gran tributo con lleno total en Ciudad Obregón el pasado fin de semana.</p>
+                </div>
+            </div>
+        </article>
+
+    </section>
+
+</main>
+
+<!-- PIE DE PÁGINA -->
+<footer>
+    <p>Copyright © Nébula Music 2025. Todos los derechos reservados.</p>
+    <a href="#">Términos y condiciones</a>
+</footer>
+
+</body>
+</html>
