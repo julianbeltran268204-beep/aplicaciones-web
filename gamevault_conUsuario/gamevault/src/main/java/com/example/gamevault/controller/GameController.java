@@ -3,10 +3,12 @@ package com.example.gamevault.controller;
 import com.example.gamevault.config.WebConfig;
 import com.example.gamevault.model.Juego;
 import com.example.gamevault.service.JuegoService;
+import jakarta.persistence.GeneratedValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,49 +45,63 @@ public class GameController {
     }
 
     @GetMapping("/juegos/nuevo")
-    public String mostrarFormulario() {
+    public String mostrarFormulario(Model model) {
+        model.addAttribute("juego", new Juego());
         return "formulario";
     }
 
     @PostMapping("/juegos")
     public String guardarJuego(@RequestParam("titulo") String titulo,
                                @RequestParam("descripcion") String descripcion,
+                               @RequestParam("precio") Double precio,
+                               @RequestParam("categoria") Double categoria,
                                @RequestParam("portada") MultipartFile portada) {
-
-        String nombreArchivo = "default.png";
-
-        if (!portada.isEmpty()) {
-            try {
-                Path uploadPath = Paths.get(UPLOAD_DIR);
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
-                }
-
-
-                nombreArchivo = UUID.randomUUID().toString() + "_" + portada.getOriginalFilename();
-                Path filePath = uploadPath.resolve(nombreArchivo);
-
-                Files.copy(portada.getInputStream(), filePath);
-
-                System.out.println("Archivo guardado en: " + filePath.toAbsolutePath());
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                // En un proyecto real, manejaríamos esta excepción apropiadamente (ej. redirigir con error)
-            }
-        }
-
 
         Juego juego = new Juego();
         juego.setTitulo(titulo);
         juego.setDescripcion(descripcion);
+        juego.setCategoria(categoria.toString());
+        juego.setPrecio(precio);
 
         this.juegoService.guardarJuego(juego, portada);
 
-        // Redirigimos a la lista de juegos (Patrón PRG - Post/Redirect/Get)
         return "redirect:/juegos";
     }
+
+        @PostMapping("/juegos/eliminar/{id}")
+        public String eliminarJuego (@PathVariable Long id){
+            this.juegoService.eliminarJuego(id);
+
+            return "redirect:/juegos";
+        }
+
+        @GetMapping("/juegos/editar/{id}")
+        public String editarJuego (@PathVariable Long id, Model model) {
+            Juego juego = this.juegoService.BusccarPorId(id);
+
+            model.addAttribute("juego", juego);
+            return "formulario";
+        }
+
+    @PostMapping("/juegos/editar/{id}")
+    public String actualizarJuego(@PathVariable Long id,
+                               @RequestParam("titulo") String titulo,
+                               @RequestParam("descripcion") String descripcion,
+                               @RequestParam("precio") Double precio,
+                               @RequestParam("categoria") Double categoria,
+                               @RequestParam(value = "portada", required = false) MultipartFile portada) {
+
+        Juego juego = this.juegoService.BusccarPorId(id);
+        juego.setTitulo(titulo);
+        juego.setDescripcion(descripcion);
+        juego.setCategoria(categoria.toString());
+        juego.setPrecio(precio);
+
+        this.juegoService.guardarJuego(juego, portada);
+
+        return "redirect:/juegos";
+    }
+
 
 }
 
