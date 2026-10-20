@@ -1,0 +1,6 @@
+plugins {
+	// Descarga automáticamente el JDK 21 que pide build.gradle si no está instalado
+	id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+rootProject.name = 'ResorucesHub'
