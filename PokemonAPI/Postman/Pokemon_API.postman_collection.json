@@ -1,0 +1,48 @@
+{
+  "info": {
+    "name": "Pokemon API REST",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:8080/api/pokemones" }],
+  "item": [
+    {
+      "name": "POST crear Pikachu",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Pikachu\",\n  \"tipo\": \"Eléctrico\",\n  \"nivel\": 5,\n  \"ataque\": 55,\n  \"defensa\": 40,\n  \"descripcion\": \"Ratón eléctrico que almacena energía en sus mejillas.\",\n  \"imagenUrl\": \"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png\"\n}" },
+        "url": { "raw": "{{baseUrl}}", "host": ["{{baseUrl}}"] }
+      }
+    },
+    {
+      "name": "GET todos",
+      "request": { "method": "GET", "url": { "raw": "{{baseUrl}}", "host": ["{{baseUrl}}"] } }
+    },
+    {
+      "name": "GET por id",
+      "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/1", "host": ["{{baseUrl}}"], "path": ["1"] } }
+    },
+    {
+      "name": "PUT actualizar completo",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Raichu\",\n  \"tipo\": \"Eléctrico\",\n  \"nivel\": 30,\n  \"ataque\": 90,\n  \"defensa\": 55,\n  \"descripcion\": \"Evolución de Pikachu.\",\n  \"imagenUrl\": \"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/26.png\"\n}" },
+        "url": { "raw": "{{baseUrl}}/1", "host": ["{{baseUrl}}"], "path": ["1"] }
+      }
+    },
+    {
+      "name": "PATCH actualizar nivel",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"nivel\": 36\n}" },
+        "url": { "raw": "{{baseUrl}}/1", "host": ["{{baseUrl}}"], "path": ["1"] }
+      }
+    },
+    {
+      "name": "DELETE eliminar",
+      "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/1", "host": ["{{baseUrl}}"], "path": ["1"] } }
+    }
+  ]
+}
