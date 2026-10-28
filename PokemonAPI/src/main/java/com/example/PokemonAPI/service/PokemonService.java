@@ -1,71 +1,69 @@
 package com.example.PokemonAPI.service;
 
+import com.example.PokemonAPI.exception.BusinessRuleException;
+import com.example.PokemonAPI.exception.ResourcesNotFoundException;
 import com.example.PokemonAPI.model.Pokemon;
 import com.example.PokemonAPI.repository.PokemonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
-// Lógica de negocio de los pokémon: consultar, crear, actualizar y eliminar.
 @Service
 public class PokemonService {
 
-    // Spring inyecta el repositorio; no hagas new PokemonRepository().
     @Autowired
     private PokemonRepository pokemonRepository;
 
-    // Obtener todos.
-    public List<Pokemon> obtenerTodos() {
+    public List<Pokemon> listar() {
         return pokemonRepository.findAll();
     }
 
-    // Obtener por ID (Optional vacío si no existe).
-    public Optional<Pokemon> obtenerPorId(Long id) {
-        return pokemonRepository.findById(id);
+    public Pokemon listarPorId(Long id) {
+        return pokemonRepository.findById(id)
+                .orElseThrow(() -> new ResourcesNotFoundException("No se encontro el id de la pokemon" +id));
     }
 
-    // Crear. Se fuerza id = null para que la BD siempre genere uno nuevo (el cliente no decide el ID).
-    public Pokemon crear(Pokemon pokemon) {
-        pokemon.setId(null);
+    public Pokemon guardar(Pokemon pokemon) {
+        if(pokemonRepository.existsByNombreIgnoreCase(pokemon.getNombre())){
+            throw new BusinessRuleException("Ya existe un pokemon con ese nombre");
+        }
         return pokemonRepository.save(pokemon);
     }
-
-    // PUT: reemplaza TODOS los atributos por los recibidos.
-    public Optional<Pokemon> actualizarCompleto(Long id, Pokemon nuevo) {
-        return pokemonRepository.findById(id).map(existente -> {
-            existente.setNombre(nuevo.getNombre());
-            existente.setTipo(nuevo.getTipo());
-            existente.setNivel(nuevo.getNivel());
-            existente.setAtaque(nuevo.getAtaque());
-            existente.setDefensa(nuevo.getDefensa());
-            existente.setDescripcion(nuevo.getDescripcion());
-            existente.setImagenUrl(nuevo.getImagenUrl());
-            return pokemonRepository.save(existente);
-        });
+    public Pokemon actualizarPokemonCompleto(Long id, Pokemon pokemonActualizado) {
+        return pokemonRepository.findById(id).map(pokemon -> {
+            pokemon.setNombre(pokemonActualizado.getNombre());
+            pokemon.setTipo(pokemonActualizado.getTipo());
+            pokemon.setNivel(pokemonActualizado.getNivel());
+            pokemon.setAtaque(pokemonActualizado.getAtaque());
+            pokemon.setDefensa(pokemonActualizado.getDefensa());
+            pokemon.setDescripcion(pokemonActualizado.getDescripcion());
+            pokemon.setImagenUrl(pokemonActualizado.getImagenUrl());
+            return pokemonRepository.save(pokemon);
+        }).orElse(null);
     }
 
-    // PATCH: actualiza SOLO los atributos que vengan en el JSON (los null se ignoran).
-    public Optional<Pokemon> actualizarParcial(Long id, Pokemon cambios) {
-        return pokemonRepository.findById(id).map(existente -> {
-            if (cambios.getNombre() != null) existente.setNombre(cambios.getNombre());
-            if (cambios.getTipo() != null) existente.setTipo(cambios.getTipo());
-            if (cambios.getNivel() != null) existente.setNivel(cambios.getNivel());
-            if (cambios.getAtaque() != null) existente.setAtaque(cambios.getAtaque());
-            if (cambios.getDefensa() != null) existente.setDefensa(cambios.getDefensa());
-            if (cambios.getDescripcion() != null) existente.setDescripcion(cambios.getDescripcion());
-            if (cambios.getImagenUrl() != null) existente.setImagenUrl(cambios.getImagenUrl());
-            return pokemonRepository.save(existente);
-        });
+    // PATCH permite modificar solamente algunos campos del recurso.
+    // En lugar de sobrescribir todo a ciegas, revisamos qué valores vienen en la petición (no son null)
+    // y solo actualizamos esos.
+    public Pokemon actualizarPokemonParcial(Long id, Pokemon pokemonParcial) {
+        return pokemonRepository.findById(id).map(pokemon -> {
+            if (pokemonParcial.getNombre() != null) pokemon.setNombre(pokemonParcial.getNombre());
+            if (pokemonParcial.getTipo() != null) pokemon.setTipo(pokemonParcial.getTipo());
+            if (pokemonParcial.getNivel() != null) pokemon.setNivel(pokemonParcial.getNivel());
+            if (pokemonParcial.getAtaque() != null) pokemon.setAtaque(pokemonParcial.getAtaque());
+            if (pokemonParcial.getDefensa() != null) pokemon.setDefensa(pokemonParcial.getDefensa());
+            if (pokemonParcial.getDescripcion() != null) pokemon.setDescripcion(pokemonParcial.getDescripcion());
+            if (pokemonParcial.getImagenUrl() != null) pokemon.setImagenUrl(pokemonParcial.getImagenUrl());
+
+            return pokemonRepository.save(pokemon);
+        }).orElse(null);
     }
 
-    // Eliminar: regresa true si existía y se borró, false si no se encontró.
-    public boolean eliminar(Long id) {
-        if (!pokemonRepository.existsById(id)) {
-            return false;
-        }
+    public void eliminarPokemon(Long id) {
         pokemonRepository.deleteById(id);
-        return true;
     }
+
 }

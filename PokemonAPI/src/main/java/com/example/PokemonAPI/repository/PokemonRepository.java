@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 // No hay que escribir SQL ni implementar nada.
 @Repository
 public interface PokemonRepository extends JpaRepository<Pokemon, Long> {
+    boolean existsByNombreIgnoreCase(String nombre);
 }
