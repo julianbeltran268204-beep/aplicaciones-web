@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p id="parrafoejemplo">Hola mundo</p>
+    <script>
+        let parrafo = document.getElementById("parrafoejemplo")
+        console.log(parrafo)
+
+        let parrafo2 = document.createElement("hi");
+
+        var contenido = document.createTextNode("Hola mundo desde el parrafo generado con js");
+
+        parrafo2.appendChild(contenido);
+    
+        setTimeout(() => {
+            document.body.appendChild(parrafo2)
+        }, 2000);
+        setTimeout(() => {
+            parrafo.parentNode.removeChild(parrafo)
+        }, 2500);
+        
+    </script>    
+</body>
+</html>
